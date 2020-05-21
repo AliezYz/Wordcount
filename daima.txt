@@ -1,0 +1,64 @@
+int CodeCount(char *Path) {   
+    
+    FILE *file = fopen(Path, "r");
+    assert(file != NULL);   
+
+    char code;
+    int count = 0;
+
+    while ((code = fgetc(file)) != EOF)     
+            count+= ((code != ' ') && (code != '\n') && (code != '\t'));     
+
+    fclose(file);
+
+    return count;
+}
+
+int WordCount(char *Path) {   
+
+    FILE *file = fopen(Path, "r");
+    assert(file != NULL);
+
+    char word;
+    int is_word = 0;    
+    int count = 0;
+
+    while ((word = fgetc(file)) != EOF) {
+        if ((word >= 'a' && word <= 'z') || (word >= 'A' && word <= 'Z')) {               
+            count += (is_word == 0);
+            is_word = 1;    
+        }
+        else 
+            is_word = 0;    
+    }
+    fclose(file);
+
+    return count;
+}
+
+int LineCount(char *Path) {    
+
+    FILE *file = fopen(Path, "r");
+    assert(file != NULL);
+
+    char *s = (char*)malloc(200 * sizeof(char));
+    int count = 0;
+    
+    for (; fgets(s, 200, file) != NULL; count++);    
+
+    free(s);
+    fclose(file);
+
+    return count;
+}
+void Run(char Type, char Type2, char *Path) {
+    
+    switch (Type) {
+    case 'c': printf("code count: %d\n", CodeCount(Path)); break;
+    case 'w': printf("word count: %d\n", WordCount(Path)); break;
+    case 'l': printf("line count: %d\n", LineCount(Path)); break;
+    case 'a': AllDetail(Path); break;
+    case 's': Scan(Path, Type2); break;
+    default: printf("type input error"); break;
+    }
+}
